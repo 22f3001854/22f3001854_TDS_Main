@@ -1,0 +1,26 @@
+name: TDS Cache Verify
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: prepare-cache-dir
+        run: |
+          mkdir -p ~/.cache/tds
+          echo "seed" > ~/.cache/tds/seed.txt
+
+      - name: prime-cache-0a108f2
+        id: prime
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/tds
+          key: cache-0a108f2
+
+      - name: echo-hit-miss
+        run: echo "cache-hit=${{ steps.prime.outputs.cache-hit }}"
